@@ -1,7 +1,7 @@
 [d,sr]=wavread('long.wav');
-r=.75;
-p=3;
-q=4;
+r=.5;
+p=1;
+q=2;
 n = 256;
 win=getW(n);
 % With hann windowing on both input and output, 
@@ -78,8 +78,8 @@ end;
 y=x';
 
 
-%soundsc(y,sr)
+soundsc(y,sr)
 f = Rsample(y,p,q); % NB: 0.8 = 4/5
-soundsc(f,sr) 
+%soundsc(f,sr) 
 %f = resample(y,p,q); % NB: 0.8 = 4/5
 %soundsc(f,sr)
