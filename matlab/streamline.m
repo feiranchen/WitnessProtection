@@ -15,16 +15,19 @@ w = n;
 s = length(d);
 
 % pre-allocate output array
-b = zeros((1+f/2),1+fix((s-f)/hop));
+% Append a 'safety' column on to the end of b to avoid problems 
+% taking *exactly* the last frame (i.e. 1*b(:,cols)+0*b(:,cols+1))
+b = zeros((1+f/2),2+fix((s-f)/hop));
 c = 1;
 for bb = 0:hop:(s-f)
   u = win.*d((bb+1):(bb+f));
-  t = fft(u);
-  b(:,c) = t(1:(1+f/2))';
+  temp = fft(u);
+  b(:,c) = temp(1:(1+f/2))';
   c = c+1;
 end;
 % Calculate the new timebase samples
-t = 0:r:(1+fix((s-f)/hop) - 2);%1+fix((s-f)/hop) =cols
+t = 0:r:(fix((s-f)/hop) - 1);%1+fix((s-f)/hop) =cols
+
 % Have to stay two cols off end because (a) counting from zero, and 
 % (b) need col n AND col n+1 to interpolate
 
@@ -41,9 +44,6 @@ c = zeros((1+f/2), length(t));
 % in case of 1:1 time scaling
 ph = angle(b(:,1));
 
-% Append a 'safety' column on to the end of b to avoid problems 
-% taking *exactly* the last frame (i.e. 1*b(:,cols)+0*b(:,cols+1))
-b = [b,zeros(1+f/2,1)];
 
 ocol = 1;
 for tt = t

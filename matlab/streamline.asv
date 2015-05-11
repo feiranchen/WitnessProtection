@@ -15,16 +15,19 @@ w = n;
 s = length(d);
 
 % pre-allocate output array
-b = zeros((1+f/2),1+fix((s-f)/hop));
+% Append a 'safety' column on to the end of b to avoid problems 
+% taking *exactly* the last frame (i.e. 1*b(:,cols)+0*b(:,cols+1))
+b = zeros((1+f/2),2+fix((s-f)/hop));
 c = 1;
 for bb = 0:hop:(s-f)
   u = win.*d((bb+1):(bb+f));
-  t = fft(u);
-  b(:,c) = t(1:(1+f/2))';
+  temp = fft(u);
+  b(:,c) = temp(1:(1+f/2))';
   c = c+1;
 end;
 % Calculate the new timebase samples
-t = 0:r:(1+fix((s-f)/hop) - 2);%1+fix((s-f)/hop) =cols
+t = 0:r:(fix((s-f)/hop) - 1);%1+fix((s-f)/hop) =cols
+
 % Have to stay two cols off end because (a) counting from zero, and 
 % (b) need col n AND col n+1 to interpolate
 
@@ -33,17 +36,14 @@ t = 0:r:(1+fix((s-f)/hop) - 2);%1+fix((s-f)/hop) =cols
 c = zeros((1+f/2), length(t));
 
 % Expected phase advance in each bin
-dphi = zeros(1,f/2+1);
-dphi(2:(1 + f/2)) = (2*pi*hop)./(f./(1:(f/2)));
+%dphi = zeros(1,f/2+1);
+%dphi(2:(1 + f/2)) = (2*pi*hop)./(f./(1:(f/2)));
 
 % Phase accumulator
 % Preset to phase of first frame for perfect reconstruction
 % in case of 1:1 time scaling
 ph = angle(b(:,1));
 
-% Append a 'safety' column on to the end of b to avoid problems 
-% taking *exactly* the last frame (i.e. 1*b(:,cols)+0*b(:,cols+1))
-b = [b,zeros(1+f/2,1)];
 
 ocol = 1;
 for tt = t
@@ -52,41 +52,34 @@ for tt = t
   tf = tt - floor(tt);
   bmag = (1-tf)*abs(bcols(:,1)) + tf*(abs(bcols(:,2)));
   % calculate phase advance
-  dp = angle(bcols(:,2)) - angle(bcols(:,1)) - dphi';
+  dp = angle(bcols(:,2)) - angle(bcols(:,1));% - dphi';
   % Reduce to -pi:pi range
   dp = dp - 2 * pi * round(dp/(2*pi));
   % Save the column
   c(:,ocol) = bmag .* exp(j*ph);
   % Cumulate phase, ready for next frame
-  ph = ph + dphi' + dp;
+  ph = ph + dp;% + dphi'
   ocol = ocol+1;
 end
 
 % Invert to a waveform
-y = istft(c, n, n, hop)';
-ftsize =0
-x = istft(d, ftsize, w, h)
-s = size(d);
-if s(1) ~= (n/2)+1
-  error('number of rows should be fftsize/2+1')
-end
-cols = s(2);
+%y = istft(c, n, n, hop)';
+s = size(c);
+cols = length(t);
 xlen = n + (cols-1)*hop;
 x = zeros(1,xlen);
 
-for bb = 0:h:(h*(cols-1))
-  ft = d(:,1+bb/hop)';
-  ft = [ft, conj(ft([((n/2)):-1:2]))];
+for bb = 0:hop:(hop*(cols-1))
+  ft = c(:,1+bb/hop)';
+  ft = [ft,  (ft([((n/2)):-1:2]))];
   px = real(ifft(ft));
   x((bb+1):(bb+n)) = x((bb+1):(bb+n))+px.*win;
 end;
-y=x'
+y=x';
 
 
-
-
-soundsc(y,sr)
+%soundsc(y,sr)
 f = Rsample(y,p,q); % NB: 0.8 = 4/5
 soundsc(f,sr) 
-f = resample(y,p,q); % NB: 0.8 = 4/5
-soundsc(f,sr)
+%f = resample(y,p,q); % NB: 0.8 = 4/5
+%soundsc(f,sr)
