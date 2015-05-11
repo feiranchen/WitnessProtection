@@ -1,7 +1,7 @@
 [d,sr]=wavread('long.wav');
-r=1.5;
-p=3;
-q=2;
+r=1;
+p=1;
+q=1;
 n = 256;
 win=getW(n);
 % With hann windowing on both input and output, 
@@ -22,43 +22,50 @@ s = length(d);
 c = 1;
 t = 0;
 frame_c = 0;
-left_frame = zeros((1+f/2), 1);
-current_frame = zeros((1+f/2), 1);
+lf_r = zeros((1+f/2), 1);
+lf_i = zeros((1+f/2), 1);
+lf_abs = zeros((1+f/2), 1);
+lf_ph = zeros((1+f/2), 1);
+cf_r = zeros((1+f/2), 1);
+cf_i = zeros((1+f/2), 1);
+cf_abs = zeros((1+f/2), 1);
+cf_ph = zeros((1+f/2), 1);
 result = zeros((1+f/2),1);
 ph = 0;
 
-cols = (fix((s-f)/hop) - 1)/r;
-xlen = n + (cols-1)*hop;
-x = zeros(1,fix(s*r));
+x = zeros(1,fix(s/r)+n);
+output_hop = 0;
 for bb = 0:hop:(s-f)
     u = win.*d((bb+1):(bb+f));             %get the next 1024 frame
     temp = fft(u);         %do the fft
-    current_frame = temp(1:(1+f/2))';  %take half the fft output
+    [cf_r, cf_i, cf_abs, cf_ph]= disassemble(temp(1:(1+f/2))');%take half the fft output
 
     while floor(t) < frame_c
         rr_frac = t - floor(t);
 
         %pvsample code here
-        bmag = abs(left_frame) * (1-rr_frac) + rr_frac * abs(current_frame); %interpolate
-        dp = angle(current_frame) - angle(left_frame); % calculate phase advance
+        bmag =  (1-rr_frac) * lf_abs + rr_frac * cf_abs; %interpolate
+        dp = cf_ph - lf_ph; % calculate phase advance
         dp = dp - 2 * pi * round(dp/(2*pi)); %translate to exponential notation
         ph = ph + dp;   %accumulate
+        result_r = bmag .* cos(ph);
+        result_i = bmag .* sin(ph);
         result = bmag .* exp(j*ph);
+        
         ft = result';
         ft = [ft, conj(ft([((n/2)):-1:2]))];
         px = real(ifft(ft));
-        if bb+n < fix(s/r)
-            x((bb+1):(bb+n)) = x((bb+1):(bb+n))+px.*win;
-        else
-            bb
-            fix(s*r)
-        end
+        x((output_hop+1):(output_hop+n)) = x((output_hop+1):(output_hop+n))+px.*win;
+        output_hop = output_hop+ hop;
         t = t + r;
         inter = 0;
     end;
 
     if floor(t) == frame_c
-        left_frame = current_frame;
+        lf_r = cf_r;
+        lf_i = cf_i;
+        lf_abs = cf_abs;
+        lf_ph = cf_ph;
         inter = 1;
     end;
     
@@ -66,7 +73,7 @@ for bb = 0:hop:(s-f)
 end;
 y=x';
 
-%soundsc(y,sr)
+soundsc(y,sr)
 f = Rsample(y,p,q); % NB: 0.8 = 4/5
 soundsc(f,sr) 
 %f = resample(y,p,q); % NB: 0.8 = 4/5
