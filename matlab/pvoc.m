@@ -7,7 +7,7 @@ function y = pvoc(x, r, n)
 % $Header: /home/empire6/dpwe/public_html/resources/matlab/pvoc/RCS/pvoc.m,v 1.3 2011/02/08 21:08:39 dpwe Exp $
 
 if nargin < 3
-  n = 256;
+  n = 512;
 end
 
 % With hann windowing on both input and output, 
