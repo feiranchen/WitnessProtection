@@ -1,7 +1,6 @@
 function f=Rsample(e, p, q)
 l= length(e);
 f=zeros(l*p/q,1);
-size(f)
 ii=1;
 for count = (1:l/q-1)
         

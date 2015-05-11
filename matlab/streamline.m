@@ -33,8 +33,8 @@ t = 0:r:(1+fix((s-f)/hop) - 2);%1+fix((s-f)/hop) =cols
 c = zeros((1+f/2), length(t));
 
 % Expected phase advance in each bin
-dphi = zeros(1,f/2+1);
-dphi(2:(1 + f/2)) = (2*pi*hop)./(f./(1:(f/2)));
+%dphi = zeros(1,f/2+1);
+%dphi(2:(1 + f/2)) = (2*pi*hop)./(f./(1:(f/2)));
 
 % Phase accumulator
 % Preset to phase of first frame for perfect reconstruction
@@ -52,13 +52,13 @@ for tt = t
   tf = tt - floor(tt);
   bmag = (1-tf)*abs(bcols(:,1)) + tf*(abs(bcols(:,2)));
   % calculate phase advance
-  dp = angle(bcols(:,2)) - angle(bcols(:,1)) - dphi';
+  dp = angle(bcols(:,2)) - angle(bcols(:,1));% - dphi';
   % Reduce to -pi:pi range
   dp = dp - 2 * pi * round(dp/(2*pi));
   % Save the column
   c(:,ocol) = bmag .* exp(j*ph);
   % Cumulate phase, ready for next frame
-  ph = ph + dphi' + dp;
+  ph = ph + dp;% + dphi'
   ocol = ocol+1;
 end
 
@@ -78,10 +78,8 @@ end;
 y=x';
 
 
-
-
-soundsc(y,sr)
+%soundsc(y,sr)
 f = Rsample(y,p,q); % NB: 0.8 = 4/5
 soundsc(f,sr) 
-f = resample(y,p,q); % NB: 0.8 = 4/5
-soundsc(f,sr)
+%f = resample(y,p,q); % NB: 0.8 = 4/5
+%soundsc(f,sr)
