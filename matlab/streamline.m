@@ -11,9 +11,9 @@ hop = n/4;
 % r = 1 anyway);
 
 % Calculate the basic STFT, magnitude scaled
-stft(d, n, n, hop);
+f = n;
+w = n;
 s = length(d);
-w = length(win);
 
 % pre-allocate output array
 X = zeros((1+f/2),1+fix((s-f)/hop));
@@ -38,8 +38,8 @@ X2 = pvsample(X, t, hop);
 % Invert to a waveform
 y = istft(X2, n, n, hop)';
 
-soundsc(e,sr)
-f = Rsample(e,p,q); % NB: 0.8 = 4/5
+soundsc(y,sr)
+f = Rsample(y,p,q); % NB: 0.8 = 4/5
 soundsc(f,sr) 
-f = resample(e,p,q); % NB: 0.8 = 4/5
+f = resample(y,p,q); % NB: 0.8 = 4/5
 soundsc(f,sr)
