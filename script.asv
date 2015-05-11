@@ -1,0 +1,7 @@
+[d,sr]=wavread('seanbs.wav');
+e = pvoc(d, 2);
+
+f = Rsample(e,2); % NB: 0.8 = 4/5
+soundsc(f,sr) 
+f = resample(e,12,6); % NB: 0.8 = 4/5
+soundsc(f,sr)
