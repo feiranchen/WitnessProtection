@@ -705,36 +705,124 @@ assign left_channel_audio_out	= audio_out;
 assign right_channel_audio_out	= audio_out;
 assign write_audio_out			= audio_in_available & audio_out_allowed;
 
+reg[31:0] sample_in_reg;
+reg sample_wrreq_reg;
+reg sample_rdreq_reg;
+wire [31:0] sample_in = sample_in_reg;
+wire [31:0] sample_out;
+wire sample_wrreq = sample_wrreq_reg;
+wire sample_rdreq = sample_rdreq_reg;
+wire samples_empty;
+
+reg[31:0] anon_in_reg;
+reg anon_wrreq_reg;
+reg anon_rdreq_reg;
+wire [31:0] anon_in = anon_in_reg;
+wire [31:0] anon_out;
+wire anon_wrreq = anon_wrreq_reg;
+wire anon_rdreq = anon_rdreq_reg;
+wire anon_empty;
+wire anon_full;
+
 reg [31:0] audio_out;
 
 /*****************************************************************************
  *                              Internal Modules                             *
  *****************************************************************************/
 
- /*fifo input_samples(
-	left_channel_audio_in,
-	rdclk,
-	rdreq,
-	wrclk,
-	wrreq,
-	q,
-	rdempty,
-	wrfull);*/
-reg cntr48;
+ fifo input_samples(
+	.data(sample_in),
+	.rdclk(OSC_50),       //read at 50MHZ
+	.rdreq(sample_rdreq),
+	.wrclk(sclk),         //write at 48KHZ sample rate
+	.wrreq(sample_wrreq),
+	.q(sample_out),
+	.rdempty(samples_empty),
+	.wrfull());
+	
+ fifo output_samples(
+	.data(anon_in),
+	.rdclk(OSC_50),       //read at 50MHZ
+	.rdreq(anon_rdreq),
+	.wrclk(OSC_50),         //write at 50MHZ sample rate
+	.wrreq(anon_wrreq),
+	.q(anon_out),
+	.rdempty(anon_empty),
+	.wrfull(anon_full));
+	
+reg [10:0] cntr48;
 reg sample_clk;
 wire sclk = sample_clk;
 
 always@(posedge OSC_50) begin
 	if (cntr48 == 11'd1042) begin 
 		cntr48 <= 0;
-		sample_clk = sample_clk ^ 1'b1;
+		sample_clk <= sample_clk ^ 1'b1;
 	end
-	else cntr48 = cntr48 + 11'd1;
+	else cntr48 <= cntr48 + 11'd1;
 end
 
 always@(posedge sclk) begin
-	audio_out <= right_channel_audio_in;
+	sample_wrreq_reg <= 1;
+	sample_in_reg <= right_channel_audio_in;
 end
+
+reg [4:0] sample_state;
+
+//read from the sample fifo
+always@(posedge OSC_50) begin
+	case(sample_state)
+		0: begin
+			if (samples_empty == 0) begin
+				//start a read
+				sample_rdreq_reg <= 1;
+				sample_state <= 1;
+				anon_wrreq_reg <= 0;
+			end
+		end
+		
+		1: begin
+			//waste a clock cycle for the read.
+			sample_rdreq_reg <= 0;
+			sample_state <= 2;
+		end
+		
+		2: begin
+			anon_wrreq_reg <= 1;
+			anon_in_reg <= sample_out;
+			//audio_out <= sample_out;
+			sample_state <= 0;
+		end
+	endcase
+end
+
+reg [4:0] anon_state;
+always@(posedge OSC_50) begin
+	case(anon_state)
+		0: begin
+			if (anon_empty == 0 && cntr48 == 0) begin
+				//start a read
+				anon_rdreq_reg <= 1;
+				anon_state <= 1;
+			end
+		end
+		
+		1: begin
+			//waste a clock cycle for the read.
+			anon_rdreq_reg <= 0;
+			anon_state <= 2;
+		end
+		
+		2: begin
+			audio_out <= anon_out;
+			anon_state <= 0;
+		end
+	endcase
+end
+//always@(posedge sclk) begin
+//	audio_out <= right_channel_audio_in;
+//end
+
 
  
 Audio_Controller Audio_Controller (
@@ -766,7 +854,7 @@ Audio_Controller Audio_Controller (
 	.audio_out_allowed			(audio_out_allowed),
 
 	.AUD_XCK					(AUD_XCK),
-	.AUD_DACDAT					(AUD_DACDAT),
+	.AUD_DACDAT					(AUD_DACDAT)
 
 );
   
