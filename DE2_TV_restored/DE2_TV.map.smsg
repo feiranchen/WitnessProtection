@@ -1,0 +1,2 @@
+Warning (10268): Verilog HDL information at DE2_TV.v(727): always construct contains both blocking and non-blocking assignments
+Info (10281): Verilog HDL Declaration information at DE2_TV.v(405): object "mY" differs only in case from object "my" in the same scope
