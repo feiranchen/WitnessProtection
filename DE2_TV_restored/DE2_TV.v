@@ -575,7 +575,7 @@ module DE2_TV
   assign Yr = (Red>>>2)+(Green>>>1)+(Blue>>>2); 
   assign Ur = Red-Green;//INTENSITY REMOVED
   assign Vr = Blue-Green;
-  parameter skl = 16'h6000; //THRESHOLD OF TEMPORAL AND SPATIAL AVERAGING
+  wire [15:0] skl = DPDT_SW[15:0]; //THRESHOLD OF TEMPORAL AND SPATIAL AVERAGING
   /*------------------ SKIN DETECTION ENDS-----------------------*/
   
   /*------------ SKIN PROCESSING STATE MACHINE BEGINS------------*/
@@ -754,16 +754,16 @@ reg [31:0] audio_out;
 	.rdempty(anon_empty),
 	.wrfull(anon_full));
 	
-reg [10:0] cntr48;
+reg [11:0] cntr48;
 reg sample_clk;
 wire sclk = sample_clk;
 
 always@(posedge OSC_50) begin
-	if (cntr48 == 11'd1042) begin 
+	if (cntr48 == 12'd1042) begin 
 		cntr48 <= 0;
 		sample_clk <= sample_clk ^ 1'b1;
 	end
-	else cntr48 <= cntr48 + 11'd1;
+	else cntr48 <= cntr48 + 12'd1;
 end
 
 always@(posedge sclk) begin
