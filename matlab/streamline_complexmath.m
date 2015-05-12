@@ -22,6 +22,7 @@ s = length(d);
 % taking *exactly* the last frame (i.e. 1*b(:,cols)+0*b(:,cols+1))
 %b = zeros((1+f/2),2+fix((s-f)/hop));
 %c = zeros((1+f/2), length(t));
+
 c = 1;
 t = 0;
 frame_c = 0;
@@ -43,13 +44,13 @@ ph = 0;
 x = zeros(1,fix(s/r)+n);
 output_hop = 0;
 for bb = 0:hop:(s-f)
-        u = win.*d((bb+1):(bb+f));             %get the next 1024 frame
+    u = win.*d((bb+1):(bb+f));             %get the next 1024 frame
     temp = fft(u);         %do the fft
     [cf_r, cf_i, cf_abs, cf_ph]= disassemble(temp');
     %current_frame = temp';
 
     while floor(t) < frame_c
-        rr_frac = t - floor(t);
+        rr_frac = (t - floor(t));
 
         %pvsample code here
         bmag =  (1-rr_frac) * lf_abs + rr_frac * cf_abs; %interpolate
@@ -81,14 +82,8 @@ for bb = 0:hop:(s-f)
 end;
 y=x';
 
-<<<<<<< HEAD
 soundsc(y,sr)
 f2 = Rsample(y,p,q); % NB: 0.8 = 4/5
 soundsc(f2,sr) 
-=======
-%soundsc(y,sr)
-f = Rsample(y,p,q); % NB: 0.8 = 4/5
-soundsc(f,sr) 
->>>>>>> 2ab812e05075cc5b4fc39edbd287828abadb9e95
 %f = resample(y,p,q); % NB: 0.8 = 4/5
 %soundsc(f,sr)

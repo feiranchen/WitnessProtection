@@ -800,13 +800,7 @@ reg [4:0] sample_state;
 	endcase
 end*/
 reg [17:0] raw_in[255:0];
-reg [17:0] final_out[255:0];
-reg [17:0] cf_r[255:0];
-reg [17:0] cf_i[255:0];
-reg [17:0] cf_abs[255:0];
-reg [17:0] cf_ph[255:0];
-reg [4:0] p_state;
-reg [8:0] frame_c; //(0~511) may overflow
+reg [4:0] sample_state;
 reg [12:0] t; //11:2
 reg [2:1]rr_frac; //1:2
 parameter r =4'd6; //2:2   1.5->6
@@ -819,11 +813,12 @@ win_lookup w1(.clock(OSC_50), .address(sample_counter), .win(win));
 always@(posedge OSC_50) begin
 	case(sample_state)
 		0: begin
-			if (samples_empty == 0 && fft_sink_ready == 1) begin
+			if (samples_empty == 0) begin
 				//start a read
 				sample_rdreq_reg <= 1;
 				sample_state <= 1;
-				
+			else
+				sample_state <= 0;
 			end
 			
 			//always turn off sink_eop and sink_sop
@@ -840,29 +835,50 @@ always@(posedge OSC_50) begin
 			sample_state <= 2;
 		end
 		
-		// multiply window
 		2: begin
-			win_so <= sample_out*win;
+		   //store raw samples
+			raw_in[sample_counter] <= sample_out;
+			// multiply window
+			win_so                 <= sample_out * win;
 			sample_state <= 3;
 		end
 		
 		3: begin
-			//write the sample to the FFT module
-			fft_sink_valid_reg <= 1;
-			fft_sink_real_reg <= win_so[35:18];
-			
-			//go back to wait for another sample
-			sample_state <= 0;
-			
-			//update the sample counter (used to index win)
-			if (sample_counter < 256) sample_counter <= sample_counter + 1;
-			else begin
-				sample_counter <= 0;
-				fft_sink_eop_reg <= 1;
+			if (fft_sink_ready == 1) begin
+				//write the sample to the FFT module
+				fft_sink_valid_reg <= 1;
+				fft_sink_real_reg <= win_so[35:18];
+				
+				//update the sample counter (used to index win)
+				if (sample_counter < 255)
+					sample_counter <= sample_counter + 1;
+				else begin
+					sample_counter <= 0;
+					fft_sink_eop_reg <= 1;
+				end
+				
+				//pulse sop on first sample
+				if (sample_counter == 0) fft_sink_sop_reg <= 1;
+				
+				//go back to wait for another sample
+				sample_state <= 0;
+			else // Wait till sink is ready
+				sample_state <= 3;
 			end
-			
-			//pulse sop on first sample
-			if (sample_counter == 0) fft_sink_sop_reg <= 1;
+		end
+		
+		4: begin
+			//turn off valid signal so we can wait for another sample
+			fft_sink_valid_reg <= 0;
+			if (sample_counter == 192) //256/4*3, first idx of last quarter
+				sample_state <= 0;
+			else
+				//shift and store raw samples
+				raw_in[sample_counter] <= raw_in[sample_counter + 64];
+				// multiply window
+				win_so                 <= raw_in[sample_counter + 64] * win;
+				sample_state <= 3;
+			end
 		end
 	endcase
 end
@@ -878,6 +894,27 @@ wire		ifft_sink_eop = fft_source_eop;
 wire[17:0]	ifft_sink_real = fft_source_real;
 wire[17:0]	ifft_sink_imag = fft_source_imag;
 wire[1:0]	ifft_sink_error = fft_source_error;
+
+
+reg [4:0] fft_state;
+reg [17:0] final_out[255:0];
+reg [17:0] cf_r[255:0];
+reg [17:0] cf_i[255:0];
+reg [17:0] cf_abs[255:0];
+reg [17:0] cf_ph[255:0];
+reg [17:0] lf_r[255:0];
+reg [17:0] lf_i[255:0];
+reg [17:0] lf_abs[255:0];
+reg [17:0] lf_ph[255:0];
+reg [8:0] frame_c; //(0~511) may overflow
+
+always@(posedge OSC_50) begin
+	case(fft_state)
+		0: begin
+			
+		end
+	endcase
+end
 
 /*FFT*/
 reg fft_sink_valid_reg, fft_sink_eop_reg, fft_sink_sop_reg;
