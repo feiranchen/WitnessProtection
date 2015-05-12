@@ -487,7 +487,7 @@ LCD_ON                       : L4        : output : 3.3-V LVTTL       :         
 GND                          : L5        : gnd    :                   :         :           :                
 HEX7[3]                      : L6        : output : 3.3-V LVTTL       :         : 2         : Y              
 HEX7[4]                      : L7        : output : 3.3-V LVTTL       :         : 2         : Y              
-TMS                          : L8        : input  :                   :         : 2         :                
+altera_reserved_tms          : L8        : input  : 3.3-V LVTTL       :         : 2         : N              
 HEX7[2]                      : L9        : output : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT_WITH_BUS_HOLD : L10       :        :                   :         : 2         :                
 VCCINT                       : L11       : power  :                   : 1.2V    :           :                
@@ -511,9 +511,9 @@ HEX6[3]                      : M2        : output : 3.3-V LVTTL       :         
 HEX6[4]                      : M3        : output : 3.3-V LVTTL       :         : 2         : Y              
 HEX6[6]                      : M4        : output : 3.3-V LVTTL       :         : 2         : Y              
 HEX6[5]                      : M5        : output : 3.3-V LVTTL       :         : 2         : Y              
-TCK                          : M6        : input  :                   :         : 2         :                
-TDO                          : M7        : output :                   :         : 2         :                
-TDI                          : M8        : input  :                   :         : 2         :                
+altera_reserved_tck          : M6        : input  : 3.3-V LVTTL       :         : 2         : N              
+altera_reserved_tdo          : M7        : output : 3.3-V LVTTL       :         : 2         : N              
+altera_reserved_tdi          : M8        : input  : 3.3-V LVTTL       :         : 2         : N              
 VCCIO2                       : M9        : power  :                   : 3.3V    : 2         :                
 VCCINT                       : M10       : power  :                   : 1.2V    :           :                
 VCCINT                       : M11       : power  :                   : 1.2V    :           :                

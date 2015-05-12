@@ -274,8 +274,8 @@ endmodule
 module arccos_rom (clock, cos, theta);
 input clock;
 input signed [17:0] cos;
-output [8:0] theta;
-reg [8:0] theta;
+output [7:0] theta;
+reg [7:0] theta;
 always@(posedge clock)
 begin
     case(cos)

@@ -575,7 +575,7 @@ module DE2_TV
   assign Yr = (Red>>>2)+(Green>>>1)+(Blue>>>2); 
   assign Ur = Red-Green;//INTENSITY REMOVED
   assign Vr = Blue-Green;
-  parameter skl = 16'h6000; //THRESHOLD OF TEMPORAL AND SPATIAL AVERAGING
+  wire [15:0] skl = DPDT_SW[15:0]; //THRESHOLD OF TEMPORAL AND SPATIAL AVERAGING
   /*------------------ SKIN DETECTION ENDS-----------------------*/
   
   /*------------ SKIN PROCESSING STATE MACHINE BEGINS------------*/
@@ -721,7 +721,7 @@ wire samples_empty;
 reg[17:0] anon_in_reg;
 reg anon_wrreq_reg;
 reg anon_rdreq_reg;
-wire [17:0] anon_in;
+wire signed [17:0] anon_in;
 wire [17:0] anon_out;
 wire anon_wrreq;
 wire anon_rdreq = anon_rdreq_reg;
@@ -754,16 +754,16 @@ reg [31:0] audio_out;
 	.rdempty(anon_empty),
 	.wrfull(anon_full));
 	
-reg [10:0] cntr48;
+reg [11:0] cntr48;
 reg sample_clk;
 wire sclk = sample_clk;
 
 always@(posedge OSC_50) begin
-	if (cntr48 == 11'd1042) begin 
+	if (cntr48 == 12'd1042) begin 
 		cntr48 <= 0;
 		sample_clk <= sample_clk ^ 1'b1;
 	end
-	else cntr48 <= cntr48 + 11'd1;
+	else cntr48 <= cntr48 + 12'd1;
 end
 
 always@(posedge sclk) begin
@@ -831,6 +831,7 @@ always@(posedge OSC_50) begin
 		end
 		
 		2: begin
+<<<<<<< HEAD
 		   //store raw samples
 			raw_in[sample_counter] <= sample_out;
 			// multiply window
@@ -847,6 +848,19 @@ always@(posedge OSC_50) begin
 				//update the sample counter (used to index win)
 				if (sample_counter < 255)
 					sample_counter <= sample_counter + 1;
+=======
+			if (fft_sink_ready == 1) begin
+				//write the sample to the FFT module
+				fft_sink_valid_reg <= 1;
+				fft_sink_real_reg <= sample_out;
+				//audio_out<=sample_out;
+				
+				//go back to wait for another sample
+				sample_state <= 0;
+				
+				//update the sample counter (used to index win)
+				if (sample_counter < 255) sample_counter <= sample_counter + 1;
+>>>>>>> 632ea8507ebf99a4934c1b5e90f8997b22a8bffb
 				else begin
 					sample_counter <= 0;
 					fft_sink_eop_reg <= 1;
@@ -854,6 +868,7 @@ always@(posedge OSC_50) begin
 				
 				//pulse sop on first sample
 				if (sample_counter == 0) fft_sink_sop_reg <= 1;
+<<<<<<< HEAD
 				
 				//go back to wait for another sample
 				sample_state <= 0;
@@ -873,6 +888,8 @@ always@(posedge OSC_50) begin
 				// multiply window
 				win_so                 <= raw_in[sample_counter + 64] * win;
 				sample_state <= 3;
+=======
+>>>>>>> 632ea8507ebf99a4934c1b5e90f8997b22a8bffb
 			end
 		end
 	endcase
@@ -886,8 +903,10 @@ reg [11:0] ifft_sample_counter;
 wire		ifft_sink_valid = fft_source_valid;
 wire		ifft_sink_sop = fft_source_sop;
 wire		ifft_sink_eop = fft_source_eop;
-wire[17:0]	ifft_sink_real = fft_source_real;
-wire[17:0]	ifft_sink_imag = fft_source_imag;
+//wire signed [17:0]	ifft_sink_real = (fft_source_real >>> fft_source_exp);
+//wire signed [17:0]	ifft_sink_imag = (fft_source_imag >>> fft_source_exp);
+wire signed [17:0]	ifft_sink_real = fft_source_real;
+wire signed [17:0]	ifft_sink_imag = fft_source_imag;
 wire[1:0]	ifft_sink_error = fft_source_error;
 
 
@@ -992,13 +1011,19 @@ reg [17:0] fft_sink_real_reg;
 
 wire fft_sink_sop = fft_sink_sop_reg;
 wire fft_sink_eop = fft_sink_eop_reg;
+<<<<<<< HEAD
 wire fft_sink_valid = fft_sink_valid_reg; 
 reg fft_source_ready;
 wire fft_source_sop, fft_source_eop, fft_source_valid;
+=======
+wire fft_sink_valid = fft_sink_valid_reg;
+wire fft_source_ready = ifft_sink_ready;
+wire fft_source_sop, fft_source_eop, fft_source_valid, fft_sink_ready;
+>>>>>>> 632ea8507ebf99a4934c1b5e90f8997b22a8bffb
 wire [1:0] fft_source_error;
-wire [5:0] fft_source_exp;
-wire [17:0] fft_sink_real = fft_sink_real_reg;
-wire [17:0] fft_source_real, fft_source_imag;
+wire signed [5:0] fft_source_exp;
+wire signed [17:0] fft_sink_real = fft_sink_real_reg;
+wire signed [17:0] fft_source_real, fft_source_imag;
 
 theFFT fft1(
 	.clk(OSC_50),
@@ -1026,11 +1051,13 @@ wire ifft_source_ready = ~anon_full;
 wire ifft_source_sop; //don't care about source sop
 wire ifft_source_eop; //don't care about source eop either
 wire ifft_source_valid; //wired to anon_wrreq to trigger a write whenever the output is valid
+wire ifft_sink_ready;
 wire [1:0] ifft_source_error;
-wire [5:0] ifft_source_exp;
-wire [17:0] ifft_source_real, ifft_source_imag;
+wire signed [5:0] ifft_source_exp;
+wire signed [17:0] ifft_source_real, ifft_source_imag;
 
 assign anon_wrreq = ifft_source_ready & ifft_source_valid;
+//assign anon_in = ((ifft_source_real >>> ifft_source_exp) >>> $signed(8));
 assign anon_in = ifft_source_real;
 
 theFFT ifft2(
