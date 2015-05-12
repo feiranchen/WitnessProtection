@@ -770,7 +770,7 @@ end
 reg [4:0] sample_state;
 
 //read from the sample fifo
-always@(posedge OSC_50) begin
+/*always@(posedge OSC_50) begin
 	case(sample_state)
 		0: begin
 			if (samples_empty == 0) begin
@@ -794,7 +794,129 @@ always@(posedge OSC_50) begin
 			sample_state <= 0;
 		end
 	endcase
+end*/
+reg [11:0] sample_counter;
+
+always@(posedge OSC_50) begin
+	case(sample_state)
+		0: begin
+			if (samples_empty == 0 && fft_sink_ready == 1) begin
+				//start a read
+				sample_rdreq_reg <= 1;
+				sample_state <= 1;
+				
+				
+				//turn off valid signal so we can wait for another sample
+				fft_sink_valid <= 0;
+			end
+			
+			//always turn off sink_eop and sink_sop
+			fft_sink_eop <= 0;
+			fft_sink_sop <= 0;
+		end
+		
+		1: begin
+			//waste a clock cycle for the read.
+			sample_rdreq_reg <= 0;
+			sample_state <= 2;
+		end
+		
+		2: begin
+			//write the sample to the FFT module
+			fft_sink_valid <= 1;
+			fft_sink_real_reg <= sample_out;
+			
+			
+			//go back to wait for another sample
+			sample_state <= 0;
+			
+			//update the sample counter (used to index win)
+			if (sample_counter < 1024) sample_counter <= sample_counter + 1;
+			else begin
+				sample_counter <= 0;
+				fft_sink_eop <= 1;
+			end
+			
+			//pulse sop on first sample
+			if (sample_counter == 0) fft_sink_sop <= 1;
+		end
+	endcase
 end
+
+reg [3:0] ifft_state;
+reg [11:0] ifft_sample_counter;
+
+//Always ready to read from fft whenever there is room in ifft input buffer.
+wire		ifft_sink_valid = fft_source_valid;
+wire		ifft_sink_sop = fft_source_sop;
+wire		ifft_sink_eop = fft_source_eop;
+wire[15:0]	ifft_sink_real = fft_source_real;
+wire[15:0]	ifft_sink_imag = fft_source_imag;
+wire[1:0]	ifft_sink_error = fft_source_error;
+
+
+
+/*FFT*/
+wire fft_sink_sop, fft_sink_eop, fft_sink_ready, fft_sink_valid;
+wire fft_source_ready, fft_source_sop, fft_source_eop, fft_source_valid;
+wire [1:0] fft_source_error;
+wire [5:0] fft_source_exp;
+wire [17:0] fft_sink_real, fft_sink_imag, fft_source_real, fft_source_imag;
+
+theFFT fft1(
+	.clk(OSC_50),
+	.reset_n(KEY[0]),
+	.inverse(1'b0),
+	.sink_valid(fft_sink_valid),
+	.sink_sop(fft_sink_sop),
+	.sink_eop(fft_sink_eop),
+	.sink_real(fft_sink_real),
+	.sink_imag(fft_sink_imag),
+	.sink_error(2'b0), //no upstream module, so no error yet.
+	.source_ready(fft_source_ready),
+	.sink_ready(fft_sink_ready),
+	.source_error(fft_source_error), //source error is connected to sink error of ifft
+	.source_sop(fft_source_sop),
+	.source_eop(fft_source_eop),
+	.source_valid(fft_source_valid),
+	.source_exp(fft_source_exp),
+	.source_real(fft_source_real),
+	.source_imag(fft_source_imag));
+
+	//always ready to take another anonymized output sample whenever the buffer is not full
+
+wire ifft_source_ready = ~anon_full
+wire ifft_source_sop;
+wire ifft_source_eop;
+wire ifft_source_valid;
+wire [1:0] ifft_source_error;
+wire [5:0] ifft_source_exp;
+wire [17:0] ifft_source_real, ifft_source_imag;
+
+assign anon_wrreq = ifft_source_ready & ifft_source_valid;
+assign anon_in = ifft_source_real;
+
+theifft ifft2(
+	.clk(OSC_50),
+	.reset_n(KEY[0]),
+	.inverse(1'b1),
+	.sink_valid(ifft_sink_valid),
+	.sink_sop(ifft_sink_sop),
+	.sink_eop(ifft_sink_eop),
+	.sink_real(ifft_sink_real),
+	.sink_imag(ifft_sink_imag),
+	.sink_error(ifft_sink_error),
+	.source_ready(ifft_source_ready),
+	.sink_ready(ifft_sink_ready),
+	.source_error(ifft_source_error),
+	.source_sop(ifft_source_sop),
+	.source_eop(ifft_source_eop),
+	.source_valid(ifft_source_valid),
+	.source_exp(ifft_source_exp),
+	.source_real(ifft_source_real),
+	.source_imag(ifft_source_imag));
+
+assign LEDG[1:0] = ifft_source_error; 
 
 reg [4:0] anon_state;
 always@(posedge OSC_50) begin
