@@ -1,25 +1,23 @@
-<session jtag_chain="USB-Blaster [USB-0]" jtag_device="@1: EP2C35 (0x020B40DD)" sof_file="">
-  <display_tree gui_logging_enabled="0">
-    <display_branch instance="auto_signaltap_0" signal_set="USE_GLOBAL_TEMP" trigger="USE_GLOBAL_TEMP"/>
+<session jtag_chain="USB-Blaster [USB-0]" jtag_device="@1: EP2C35 (0x020B40DD)" sof_file="DE2_TV.sof">
+  <display_tree gui_logging_enabled="1">
+    <display_branch instance="auto_signaltap_0" signal_set="signal_set: 2015/05/12 08:48:55  #0" trigger="trigger: 2015/05/12 08:55:50  #0"/>
   </display_tree>
-  <global_info>
-    <single attribute="active instance" value="0"/>
-    <multi attribute="frame size" size="2" value="1280,962"/>
-    <single attribute="jtag widget visible" value="1"/>
-    <multi attribute="jtag widget size" size="2" value="334,120"/>
-    <single attribute="instance widget visible" value="1"/>
-    <single attribute="config widget visible" value="1"/>
-    <single attribute="hierarchy widget visible" value="1"/>
-    <single attribute="data log widget visible" value="1"/>
-  </global_info>
-  <instance entity_name="sld_signaltap" is_auto_node="yes" name="auto_signaltap_0" source_file="sld_signaltap.vhd">
+  <instance entity_name="sld_signaltap" is_auto_node="yes" is_expanded="true" name="auto_signaltap_0" source_file="sld_signaltap.vhd">
     <node_ip_info instance_id="0" mfg_id="110" node_id="0" version="6"/>
     <position_info>
       <single attribute="active tab" value="1"/>
+      <single attribute="setup vertical scroll position" value="0"/>
+      <single attribute="setup horizontal scroll position" value="0"/>
+      <single attribute="data vertical scroll position" value="0"/>
+      <single attribute="data horizontal scroll position" value="37"/>
+      <single attribute="zoom level numerator" value="16"/>
+      <single attribute="zoom level denominator" value="1"/>
+      <single attribute="zoom offset numerator" value="8160"/>
+      <single attribute="zoom offset denominator" value="1"/>
     </position_info>
-    <signal_set global_temp="1" name="signal_set: 2015/05/12 01:50:05  #0">
+    <signal_set global_temp="1" name="signal_set: 2015/05/12 07:37:29  #0">
       <clock name="auto_stp_external_clock_0" polarity="posedge" tap_mode="classic"/>
-      <config ram_type="M4K" reserved_data_nodes="0" reserved_storage_qualifier_nodes="0" reserved_trigger_nodes="0" sample_depth="128" trigger_in_enable="no" trigger_out_enable="no"/>
+      <config ram_type="M4K" reserved_data_nodes="0" reserved_storage_qualifier_nodes="0" reserved_trigger_nodes="0" sample_depth="512" trigger_in_enable="no" trigger_out_enable="no"/>
       <top_entity/>
       <signal_vec>
         <trigger_input_vec>
@@ -31,6 +29,49 @@
           <wire name="fft_sink_valid_reg" tap_mode="classic" type="register"/>
           <wire name="fft_source_error[0]" tap_mode="classic" type="combinatorial"/>
           <wire name="fft_source_error[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_ready" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[9]" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_eop" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_error[0]" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_error[1]" tap_mode="classic" type="combinatorial"/>
@@ -50,6 +91,49 @@
           <wire name="fft_sink_valid_reg" tap_mode="classic" type="register"/>
           <wire name="fft_source_error[0]" tap_mode="classic" type="combinatorial"/>
           <wire name="fft_source_error[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_ready" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[9]" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_eop" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_error[0]" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_error[1]" tap_mode="classic" type="combinatorial"/>
@@ -69,6 +153,49 @@
           <wire name="fft_sink_valid_reg" tap_mode="classic" type="register"/>
           <wire name="fft_source_error[0]" tap_mode="classic" type="combinatorial"/>
           <wire name="fft_source_error[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_exp[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_imag[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_ready" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="fft_source_real[9]" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_eop" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_error[0]" tap_mode="classic" type="combinatorial"/>
           <wire name="ifft_sink_error[1]" tap_mode="classic" type="combinatorial"/>
@@ -105,6 +232,55 @@
             <net is_signal_inverted="no" name="fft_source_error[1]"/>
             <net is_signal_inverted="no" name="fft_source_error[0]"/>
           </bus>
+          <bus is_signal_inverted="no" link="all" name="fft_source_exp" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="fft_source_exp[5]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[4]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[3]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[2]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[1]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[0]"/>
+          </bus>
+          <bus is_signal_inverted="no" link="all" name="fft_source_imag" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="fft_source_imag[17]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[16]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[15]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[14]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[13]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[12]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[11]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[10]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[9]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[8]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[7]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[6]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[5]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[4]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[3]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[2]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[1]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="fft_source_ready"/>
+          <bus is_signal_inverted="no" link="all" name="fft_source_real" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="fft_source_real[17]"/>
+            <net is_signal_inverted="no" name="fft_source_real[16]"/>
+            <net is_signal_inverted="no" name="fft_source_real[15]"/>
+            <net is_signal_inverted="no" name="fft_source_real[14]"/>
+            <net is_signal_inverted="no" name="fft_source_real[13]"/>
+            <net is_signal_inverted="no" name="fft_source_real[12]"/>
+            <net is_signal_inverted="no" name="fft_source_real[11]"/>
+            <net is_signal_inverted="no" name="fft_source_real[10]"/>
+            <net is_signal_inverted="no" name="fft_source_real[9]"/>
+            <net is_signal_inverted="no" name="fft_source_real[8]"/>
+            <net is_signal_inverted="no" name="fft_source_real[7]"/>
+            <net is_signal_inverted="no" name="fft_source_real[6]"/>
+            <net is_signal_inverted="no" name="fft_source_real[5]"/>
+            <net is_signal_inverted="no" name="fft_source_real[4]"/>
+            <net is_signal_inverted="no" name="fft_source_real[3]"/>
+            <net is_signal_inverted="no" name="fft_source_real[2]"/>
+            <net is_signal_inverted="no" name="fft_source_real[1]"/>
+            <net is_signal_inverted="no" name="fft_source_real[0]"/>
+          </bus>
         </data_view>
         <setup_view>
           <net is_signal_inverted="no" name="OSC_50"/>
@@ -130,9 +306,58 @@
             <net is_signal_inverted="no" name="fft_source_error[1]"/>
             <net is_signal_inverted="no" name="fft_source_error[0]"/>
           </bus>
+          <bus is_signal_inverted="no" link="all" name="fft_source_exp" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="fft_source_exp[5]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[4]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[3]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[2]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[1]"/>
+            <net is_signal_inverted="no" name="fft_source_exp[0]"/>
+          </bus>
+          <bus is_signal_inverted="no" link="all" name="fft_source_imag" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="fft_source_imag[17]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[16]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[15]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[14]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[13]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[12]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[11]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[10]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[9]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[8]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[7]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[6]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[5]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[4]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[3]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[2]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[1]"/>
+            <net is_signal_inverted="no" name="fft_source_imag[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="fft_source_ready"/>
+          <bus is_signal_inverted="no" link="all" name="fft_source_real" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="fft_source_real[17]"/>
+            <net is_signal_inverted="no" name="fft_source_real[16]"/>
+            <net is_signal_inverted="no" name="fft_source_real[15]"/>
+            <net is_signal_inverted="no" name="fft_source_real[14]"/>
+            <net is_signal_inverted="no" name="fft_source_real[13]"/>
+            <net is_signal_inverted="no" name="fft_source_real[12]"/>
+            <net is_signal_inverted="no" name="fft_source_real[11]"/>
+            <net is_signal_inverted="no" name="fft_source_real[10]"/>
+            <net is_signal_inverted="no" name="fft_source_real[9]"/>
+            <net is_signal_inverted="no" name="fft_source_real[8]"/>
+            <net is_signal_inverted="no" name="fft_source_real[7]"/>
+            <net is_signal_inverted="no" name="fft_source_real[6]"/>
+            <net is_signal_inverted="no" name="fft_source_real[5]"/>
+            <net is_signal_inverted="no" name="fft_source_real[4]"/>
+            <net is_signal_inverted="no" name="fft_source_real[3]"/>
+            <net is_signal_inverted="no" name="fft_source_real[2]"/>
+            <net is_signal_inverted="no" name="fft_source_real[1]"/>
+            <net is_signal_inverted="no" name="fft_source_real[0]"/>
+          </bus>
         </setup_view>
       </presentation>
-      <trigger attribute_mem_mode="false" gap_record="true" global_temp="1" name="trigger: 2015/05/12 01:50:05  #1" position="pre" power_up_trigger_mode="false" record_data_gap="true" segment_size="1" storage_mode="off" storage_qualifier_disabled="no" storage_qualifier_port_is_pin="true" storage_qualifier_port_name="auto_stp_external_storage_qualifier" storage_qualifier_port_tap_mode="classic" trigger_in="dont_care" trigger_out="active high" trigger_type="circular">
+      <trigger CRC="ABE5CC28" attribute_mem_mode="false" gap_record="true" global_temp="1" name="trigger: 2015/05/12 07:58:32  #0" position="pre" power_up_trigger_mode="false" record_data_gap="true" segment_size="1" storage_mode="off" storage_qualifier_disabled="no" storage_qualifier_port_is_pin="true" storage_qualifier_port_name="auto_stp_external_storage_qualifier" storage_qualifier_port_tap_mode="classic" trigger_in="dont_care" trigger_out="active high" trigger_type="circular">
         <power_up_trigger position="pre" storage_qualifier_disabled="no" trigger_in="dont_care" trigger_out="active high"/>
         <events use_custom_flow_control="no">
           <level enabled="yes" name="condition1" type="basic">
@@ -142,8 +367,195 @@
           </level>
         </events>
         <storage_qualifier_events>
-          <transitional>00000000000000000
-            <pwr_up_transitional>00000000000000000</pwr_up_transitional>
+          <transitional>000000000000000000000000000000000000000000000000000000000000
+            <pwr_up_transitional>000000000000000000000000000000000000000000000000000000000000</pwr_up_transitional>
+          </transitional>
+          <storage_qualifier_level type="basic">
+            <power_up>
+            </power_up>
+            <op_node/>
+          </storage_qualifier_level>
+          <storage_qualifier_level type="basic">
+            <power_up>
+            </power_up>
+            <op_node/>
+          </storage_qualifier_level>
+          <storage_qualifier_level type="basic">
+            <power_up>
+            </power_up>
+            <op_node/>
+          </storage_qualifier_level>
+        </storage_qualifier_events>
+      </trigger>
+    </signal_set>
+    <signal_set name="signal_set: 2015/05/12 08:48:55  #0">
+      <clock name="OSC_50" polarity="posedge" tap_mode="classic"/>
+      <config ram_type="M4K" reserved_data_nodes="0" reserved_storage_qualifier_nodes="0" reserved_trigger_nodes="0" sample_depth="128" trigger_in_enable="no" trigger_out_enable="no"/>
+      <top_entity/>
+      <signal_vec>
+        <trigger_input_vec>
+          <wire name="fft_sink_real_reg[0]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[10]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[11]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[12]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[13]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[14]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[15]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[16]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[17]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[1]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[2]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[3]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[4]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[5]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[6]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[7]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[8]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[9]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_sop_reg" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_valid_reg" tap_mode="classic" type="register"/>
+        </trigger_input_vec>
+        <data_input_vec>
+          <wire name="fft_sink_real_reg[0]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[10]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[11]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[12]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[13]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[14]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[15]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[16]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[17]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[1]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[2]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[3]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[4]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[5]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[6]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[7]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[8]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[9]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_sop_reg" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_valid_reg" tap_mode="classic" type="register"/>
+        </data_input_vec>
+        <storage_qualifier_input_vec>
+          <wire name="fft_sink_real_reg[0]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[10]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[11]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[12]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[13]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[14]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[15]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[16]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[17]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[1]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[2]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[3]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[4]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[5]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[6]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[7]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[8]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_real_reg[9]" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_sop_reg" tap_mode="classic" type="register"/>
+          <wire name="fft_sink_valid_reg" tap_mode="classic" type="register"/>
+        </storage_qualifier_input_vec>
+      </signal_vec>
+      <presentation>
+        <data_view>
+          <net is_signal_inverted="no" name="fft_sink_sop_reg"/>
+          <bus is_signal_inverted="no" link="all" name="fft_sink_real_reg" order="msb_to_lsb" radix="hex" state="collapse" type="register">
+            <net is_signal_inverted="no" name="fft_sink_real_reg[17]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[16]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[15]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[14]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[13]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[12]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[11]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[10]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[9]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[8]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[7]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[6]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[5]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[4]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[3]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[2]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[1]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="fft_sink_valid_reg"/>
+        </data_view>
+        <setup_view>
+          <net is_signal_inverted="no" name="fft_sink_sop_reg"/>
+          <bus is_signal_inverted="no" link="all" name="fft_sink_real_reg" order="msb_to_lsb" radix="hex" state="collapse" type="register">
+            <net is_signal_inverted="no" name="fft_sink_real_reg[17]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[16]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[15]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[14]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[13]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[12]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[11]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[10]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[9]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[8]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[7]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[6]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[5]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[4]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[3]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[2]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[1]"/>
+            <net is_signal_inverted="no" name="fft_sink_real_reg[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="fft_sink_valid_reg"/>
+        </setup_view>
+      </presentation>
+      <trigger CRC="7B7A91F6" attribute_mem_mode="false" gap_record="true" name="trigger: 2015/05/12 08:48:55  #1" position="pre" power_up_trigger_mode="false" record_data_gap="true" segment_size="1" storage_mode="off" storage_qualifier_disabled="no" storage_qualifier_port_is_pin="true" storage_qualifier_port_name="auto_stp_external_storage_qualifier" storage_qualifier_port_tap_mode="classic" trigger_in="dont_care" trigger_out="active high" trigger_type="circular">
+        <power_up_trigger position="pre" storage_qualifier_disabled="no" trigger_in="dont_care" trigger_out="active high"/>
+        <events use_custom_flow_control="no">
+          <level enabled="yes" name="condition1" type="basic">
+            <power_up enabled="yes">
+            </power_up>
+            <op_node/>
+          </level>
+        </events>
+        <storage_qualifier_events>
+          <transitional>00000000000000000000
+            <pwr_up_transitional>00000000000000000000</pwr_up_transitional>
+          </transitional>
+          <storage_qualifier_level type="basic">
+            <power_up>
+            </power_up>
+            <op_node/>
+          </storage_qualifier_level>
+          <storage_qualifier_level type="basic">
+            <power_up>
+            </power_up>
+            <op_node/>
+          </storage_qualifier_level>
+          <storage_qualifier_level type="basic">
+            <power_up>
+            </power_up>
+            <op_node/>
+          </storage_qualifier_level>
+        </storage_qualifier_events>
+        <log>
+          <data name="log: 2015/05/12 08:54:59  #0" power_up_mode="false" sample_depth="128" trigger_position="16">1011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100101111111011001101001011111110110011010010111111101100110100</data>
+          <extradata>1111111111111111T111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</extradata>
+        </log>
+      </trigger>
+      <trigger attribute_mem_mode="false" gap_record="true" name="trigger: 2015/05/12 08:55:50  #0" position="pre" power_up_trigger_mode="false" record_data_gap="true" segment_size="1" storage_mode="off" storage_qualifier_disabled="no" storage_qualifier_port_is_pin="true" storage_qualifier_port_name="auto_stp_external_storage_qualifier" storage_qualifier_port_tap_mode="classic" trigger_in="dont_care" trigger_out="active high" trigger_type="circular">
+        <power_up_trigger position="pre" storage_qualifier_disabled="no" trigger_in="dont_care" trigger_out="active high"/>
+        <events use_custom_flow_control="no">
+          <level enabled="yes" name="condition1" type="basic">'fft_sink_valid_reg' == high
+            <power_up enabled="yes">
+            </power_up>
+            <op_node/>
+          </level>
+        </events>
+        <storage_qualifier_events>
+          <transitional>00000000000000000000
+            <pwr_up_transitional>00000000000000000000</pwr_up_transitional>
           </transitional>
           <storage_qualifier_level type="basic">
             <power_up>
@@ -165,4 +577,16 @@
     </signal_set>
   </instance>
   <mnemonics/>
+  <global_info>
+    <single attribute="active instance" value="0"/>
+    <single attribute="config widget visible" value="1"/>
+    <single attribute="data log widget visible" value="1"/>
+    <single attribute="hierarchy widget visible" value="1"/>
+    <single attribute="instance widget visible" value="1"/>
+    <single attribute="jtag widget visible" value="1"/>
+    <multi attribute="frame size" size="2" value="1280,962"/>
+    <multi attribute="jtag widget size" size="2" value="334,189"/>
+    <single attribute="sof manager visible" value="1"/>
+  </global_info>
+  <static_plugin_mnemonics/>
 </session>

@@ -721,7 +721,7 @@ wire samples_empty;
 reg[17:0] anon_in_reg;
 reg anon_wrreq_reg;
 reg anon_rdreq_reg;
-wire [17:0] anon_in;
+wire signed [17:0] anon_in;
 wire [17:0] anon_out;
 wire anon_wrreq;
 wire anon_rdreq = anon_rdreq_reg;
@@ -806,7 +806,7 @@ reg [11:0] sample_counter;
 always@(posedge OSC_50) begin
 	case(sample_state)
 		0: begin
-			if (samples_empty == 0 && fft_sink_ready == 1) begin
+			if (samples_empty == 0) begin
 				//start a read
 				sample_rdreq_reg <= 1;
 				sample_state <= 1;
@@ -828,23 +828,25 @@ always@(posedge OSC_50) begin
 		end
 		
 		2: begin
-			//write the sample to the FFT module
-			fft_sink_valid_reg <= 1;
-			fft_sink_real_reg <= sample_out;
-			//audio_out<=sample_out;
-			
-			//go back to wait for another sample
-			sample_state <= 0;
-			
-			//update the sample counter (used to index win)
-			if (sample_counter < 256) sample_counter <= sample_counter + 1;
-			else begin
-				sample_counter <= 0;
-				fft_sink_eop_reg <= 1;
+			if (fft_sink_ready == 1) begin
+				//write the sample to the FFT module
+				fft_sink_valid_reg <= 1;
+				fft_sink_real_reg <= sample_out;
+				//audio_out<=sample_out;
+				
+				//go back to wait for another sample
+				sample_state <= 0;
+				
+				//update the sample counter (used to index win)
+				if (sample_counter < 255) sample_counter <= sample_counter + 1;
+				else begin
+					sample_counter <= 0;
+					fft_sink_eop_reg <= 1;
+				end
+				
+				//pulse sop on first sample
+				if (sample_counter == 0) fft_sink_sop_reg <= 1;
 			end
-			
-			//pulse sop on first sample
-			if (sample_counter == 0) fft_sink_sop_reg <= 1;
 		end
 	endcase
 end
@@ -857,8 +859,10 @@ reg [11:0] ifft_sample_counter;
 wire		ifft_sink_valid = fft_source_valid;
 wire		ifft_sink_sop = fft_source_sop;
 wire		ifft_sink_eop = fft_source_eop;
-wire[17:0]	ifft_sink_real = fft_source_real;
-wire[17:0]	ifft_sink_imag = fft_source_imag;
+//wire signed [17:0]	ifft_sink_real = (fft_source_real >>> fft_source_exp);
+//wire signed [17:0]	ifft_sink_imag = (fft_source_imag >>> fft_source_exp);
+wire signed [17:0]	ifft_sink_real = fft_source_real;
+wire signed [17:0]	ifft_sink_imag = fft_source_imag;
 wire[1:0]	ifft_sink_error = fft_source_error;
 
 
@@ -871,11 +875,11 @@ wire fft_sink_sop = fft_sink_sop_reg;
 wire fft_sink_eop = fft_sink_eop_reg;
 wire fft_sink_valid = fft_sink_valid_reg;
 wire fft_source_ready = ifft_sink_ready;
-wire fft_source_sop, fft_source_eop, fft_source_valid;
+wire fft_source_sop, fft_source_eop, fft_source_valid, fft_sink_ready;
 wire [1:0] fft_source_error;
-wire [5:0] fft_source_exp;
-wire [17:0] fft_sink_real = fft_sink_real_reg;
-wire [17:0] fft_source_real, fft_source_imag;
+wire signed [5:0] fft_source_exp;
+wire signed [17:0] fft_sink_real = fft_sink_real_reg;
+wire signed [17:0] fft_source_real, fft_source_imag;
 
 theFFT fft1(
 	.clk(OSC_50),
@@ -903,11 +907,13 @@ wire ifft_source_ready = ~anon_full;
 wire ifft_source_sop; //don't care about source sop
 wire ifft_source_eop; //don't care about source eop either
 wire ifft_source_valid; //wired to anon_wrreq to trigger a write whenever the output is valid
+wire ifft_sink_ready;
 wire [1:0] ifft_source_error;
-wire [5:0] ifft_source_exp;
-wire [17:0] ifft_source_real, ifft_source_imag;
+wire signed [5:0] ifft_source_exp;
+wire signed [17:0] ifft_source_real, ifft_source_imag;
 
 assign anon_wrreq = ifft_source_ready & ifft_source_valid;
+//assign anon_in = ((ifft_source_real >>> ifft_source_exp) >>> $signed(8));
 assign anon_in = ifft_source_real;
 
 theFFT ifft2(
