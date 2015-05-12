@@ -22,7 +22,7 @@ reg	[15:0]	LUT_DATA;
 reg	[5:0]	LUT_INDEX;
 reg	[3:0]	mSetup_ST;
 
-parameter USE_MIC_INPUT		= 1'b0;
+parameter USE_MIC_INPUT		= 1'b1;
 
 parameter AUD_LINE_IN_LC	= 9'd24;
 parameter AUD_LINE_IN_RC	= 9'd24;

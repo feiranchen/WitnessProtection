@@ -81,8 +81,14 @@ for bb = 0:hop:(s-f)
 end;
 y=x';
 
+<<<<<<< HEAD
 soundsc(y,sr)
 f2 = Rsample(y,p,q); % NB: 0.8 = 4/5
 soundsc(f2,sr) 
+=======
+%soundsc(y,sr)
+f = Rsample(y,p,q); % NB: 0.8 = 4/5
+soundsc(f,sr) 
+>>>>>>> 2ab812e05075cc5b4fc39edbd287828abadb9e95
 %f = resample(y,p,q); % NB: 0.8 = 4/5
 %soundsc(f,sr)

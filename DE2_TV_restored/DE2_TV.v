@@ -703,6 +703,10 @@ assign read_audio_in			= audio_in_available & audio_out_allowed;
 
 assign left_channel_audio_out	= audio_out;
 assign right_channel_audio_out	= audio_out;
+//assign left_channel_audio_out = {right_channel_audio_in[31:14],14'b0};
+//assign right_channel_audio_out = {right_channel_audio_in[31:14],14'b0};
+//assign left_channel_audio_out = left_channel_audio_in;
+//assign right_channel_audio_out = right_channel_audio_in;
 assign write_audio_out			= audio_in_available & audio_out_allowed;
 
 reg[17:0] sample_in_reg;
@@ -777,7 +781,7 @@ reg [4:0] sample_state;
 				//start a read
 				sample_rdreq_reg <= 1;
 				sample_state <= 1;
-				anon_wrreq_reg <= 0;
+				//anon_wrreq_reg <= 0;
 			end
 		end
 		
@@ -788,14 +792,13 @@ reg [4:0] sample_state;
 		end
 		
 		2: begin
-			anon_wrreq_reg <= 1;
-			anon_in_reg <= sample_out;
-			//audio_out <= sample_out;
+			//anon_wrreq_reg <= 1;
+			//anon_in_reg <= sample_out;
+			audio_out <= {sample_out, 14'b0};
 			sample_state <= 0;
 		end
 	endcase
 end*/
-
 reg [17:0] raw_in[255:0];
 reg [17:0] final_out[255:0];
 reg [17:0] cf_r[255:0];
@@ -821,13 +824,14 @@ always@(posedge OSC_50) begin
 				sample_rdreq_reg <= 1;
 				sample_state <= 1;
 				
-				//turn off valid signal so we can wait for another sample
-				fft_sink_valid_reg <= 0;
 			end
 			
 			//always turn off sink_eop and sink_sop
 			fft_sink_eop_reg <= 0;
 			fft_sink_sop_reg <= 0;
+
+			//turn off valid signal so we can wait for another sample
+			fft_sink_valid_reg <= 0;
 		end
 		
 		1: begin
@@ -863,6 +867,7 @@ always@(posedge OSC_50) begin
 	endcase
 end
 
+
 reg [3:0] ifft_state;
 reg [11:0] ifft_sample_counter;
 
@@ -881,7 +886,8 @@ reg [17:0] fft_sink_real_reg;
 wire fft_sink_sop = fft_sink_sop_reg;
 wire fft_sink_eop = fft_sink_eop_reg;
 wire fft_sink_valid = fft_sink_valid_reg;
-wire fft_source_ready, fft_source_sop, fft_source_eop, fft_source_valid;
+wire fft_source_ready = ifft_sink_ready;
+wire fft_source_sop, fft_source_eop, fft_source_valid;
 wire [1:0] fft_source_error;
 wire [5:0] fft_source_exp;
 wire [17:0] fft_sink_real = fft_sink_real_reg;
@@ -941,7 +947,8 @@ theFFT ifft2(
 	.source_imag(ifft_source_imag));
 
 assign LED_GREEN[1:0] = ifft_source_error; 
-assign LED_GREEN[8:2] = 0;
+assign LED_GREEN[3:2] = fft_source_error;
+assign LED_GREEN[8:4] = 0;
 
 reg [4:0] anon_state;
 always@(posedge OSC_50) begin

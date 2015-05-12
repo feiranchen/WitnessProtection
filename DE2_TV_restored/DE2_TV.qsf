@@ -496,7 +496,7 @@ set_instance_assignment -name IO_STANDARD LVTTL -to FL_ADDR[20]
 set_instance_assignment -name IO_STANDARD LVTTL -to FL_ADDR[21]
 set_global_assignment -name STRATIX_CONFIGURATION_DEVICE EPCS16
 set_global_assignment -name ENABLE_SIGNALTAP OFF
-set_global_assignment -name USE_SIGNALTAP_FILE stp1.stp
+set_global_assignment -name USE_SIGNALTAP_FILE bullshit.stp
 set_global_assignment -name AUTO_ENABLE_SMART_COMPILE ON
 set_parameter -name CYCLONEII_SAFE_WRITE "\"VERIFIED_SAFE\"" -to "dual_port:f0|altsyncram:altsyncram_component"
 set_global_assignment -name FMAX_REQUIREMENT "50 MHz" -section_id OSC_50
@@ -576,4 +576,5 @@ set_global_assignment -name VERILOG_FILE body_LUT.v
 set_global_assignment -name QIP_FILE fifo.qip
 set_global_assignment -name QIP_FILE theFFT.qip
 
+set_global_assignment -name SIGNALTAP_FILE bullshit.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
