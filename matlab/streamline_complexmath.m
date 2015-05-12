@@ -1,4 +1,7 @@
 [d,sr]=wavread('long.wav');
+if size(d,2)==1
+    d=d'
+end
 r=1.5;
 p=3;
 q=2;
@@ -40,7 +43,7 @@ ph = 0;
 x = zeros(1,fix(s/r)+n);
 output_hop = 0;
 for bb = 0:hop:(s-f)
-    u = win.*d((bb+1):(bb+f));             %get the next 1024 frame
+        u = win.*d((bb+1):(bb+f));             %get the next 1024 frame
     temp = fft(u);         %do the fft
     [cf_r, cf_i, cf_abs, cf_ph]= disassemble(temp');
     %current_frame = temp';
@@ -53,7 +56,7 @@ for bb = 0:hop:(s-f)
         %tp = angle(current_frame) - angle(left_frame);
         dp = cf_ph - lf_ph; % calculate phase advance
         
-        dp = dp - 2 * pi * round(dp/(2*3.1416)); %translate to exponential notation
+        dp = dp - 2 * 3.1416 * round(dp/(2*3.1416)); %translate to exponential notation
         ph = ph + dp;   %accumulate
         result_r = bmag .* cos(ph);
         result_i = bmag .* sin(ph);
@@ -79,7 +82,7 @@ end;
 y=x';
 
 soundsc(y,sr)
-f = Rsample(y,p,q); % NB: 0.8 = 4/5
-soundsc(f,sr) 
+f2 = Rsample(y,p,q); % NB: 0.8 = 4/5
+soundsc(f2,sr) 
 %f = resample(y,p,q); % NB: 0.8 = 4/5
 %soundsc(f,sr)

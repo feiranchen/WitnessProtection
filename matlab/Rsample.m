@@ -9,32 +9,3 @@ for count = (1:l/q-1)
     end
     ii=ii+q;
 end
-
-
-
-
-
-
-
-
-% if r<=1
-%     count =1;
-%     for ii = (1:l)
-%         if count == 1/r
-%             f(ii*r)=e(ii);
-%             count =1;
-%         else
-%             count = count+1;
-%         end
-%     end
-% else
-%     for ii = (1:l)
-%         if ii==l
-%             f((ii-1)*r + jj)=e(ii);
-%         else
-%             for jj = (1:r)
-%                 f((ii-1)*r + jj)=e(ii)+(e(ii+1)-e(ii))*(jj-1)/r;
-%             end
-%         end
-%     end
-% end

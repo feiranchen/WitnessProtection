@@ -796,7 +796,9 @@ reg [4:0] sample_state;
 	endcase
 end*/
 reg [11:0] sample_counter;
-
+wire signed [17:0] win;
+reg signed[35:0] win_so;
+win_lookup w1(.clock(OSC_50), .address(sample_counter), .win(win));
 always@(posedge OSC_50) begin
 	case(sample_state)
 		0: begin
@@ -820,7 +822,13 @@ always@(posedge OSC_50) begin
 			sample_state <= 2;
 		end
 		
+		// multiply window
 		2: begin
+			win_so <= sample_out*win;
+			sample_state <= 3;
+		end
+		
+		3: begin
 			//write the sample to the FFT module
 			fft_sink_valid_reg <= 1;
 			fft_sink_real_reg <= sample_out;
@@ -852,8 +860,6 @@ wire		ifft_sink_eop = fft_source_eop;
 wire[17:0]	ifft_sink_real = fft_source_real;
 wire[17:0]	ifft_sink_imag = fft_source_imag;
 wire[1:0]	ifft_sink_error = fft_source_error;
-
-
 
 /*FFT*/
 reg fft_sink_valid_reg, fft_sink_eop_reg, fft_sink_sop_reg;
@@ -920,6 +926,35 @@ theFFT ifft2(
 	.source_exp(ifft_source_exp),
 	.source_real(ifft_source_real),
 	.source_imag(ifft_source_imag));
+
+	
+reg [17:0] raw_in[255:0];
+reg [17:0] final_out[255:0];
+reg [17:0] cf_r[255:0];
+reg [17:0] cf_i[255:0];
+reg [17:0] cf_abs[255:0];
+reg [17:0] cf_ph[255:0];
+reg [4:0] p_state;
+reg [8:0] frame_c; //(0~511) may overflow
+reg [12:0] t; //11:2
+reg [2:1]rr_frac; //1:2
+parameter r =4'd6; //2:2
+p =3'd6;//
+q =3'd6;//
+always@(posedge OSC_50) begin
+	case(p_state)
+		0: begin //reset
+			
+		end
+		
+		1: begin //first while loop
+			rr_frac
+			else if 
+		end
+
+
+	endcase
+end
 
 assign LED_GREEN[1:0] = ifft_source_error; 
 assign LED_GREEN[8:2] = 0;
