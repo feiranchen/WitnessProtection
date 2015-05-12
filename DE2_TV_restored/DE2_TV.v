@@ -801,11 +801,6 @@ reg [4:0] sample_state;
 end*/
 reg [17:0] raw_in[255:0];
 reg [4:0] sample_state;
-reg [12:0] t; //11:2
-reg [2:1]rr_frac; //1:2
-parameter r =4'd6; //2:2   1.5->6
-p =3'd3;//3:0
-q =3'd2;//3:0
 reg [11:0] sample_counter;
 wire signed [17:0] win;//0:18
 reg signed [35:0] win_so;//0:36 win*sample_counter
@@ -897,22 +892,97 @@ wire[1:0]	ifft_sink_error = fft_source_error;
 
 
 reg [4:0] fft_state;
-reg [17:0] final_out[255:0];
-reg [17:0] cf_r[255:0];
-reg [17:0] cf_i[255:0];
-reg [17:0] cf_abs[255:0];
-reg [17:0] cf_ph[255:0];
-reg [17:0] lf_r[255:0];
-reg [17:0] lf_i[255:0];
-reg [17:0] lf_abs[255:0];
-reg [17:0] lf_ph[255:0];
+reg signed [17:0] cf_r[255:0];//0:17
+reg signed [17:0] cf_i[255:0];//0:17
+reg signed [17:0] cf_abs[255:0];//0:17
+reg signed [10:0] cf_ph[255:0];//2:8
+reg signed [17:0] lf_r[255:0];//0:17
+reg signed [17:0] lf_i[255:0];//0:17
+reg signed [17:0] lf_abs[255:0];//0:17
+reg signed [10:0] lf_ph[255:0];//2:8
+reg signed [17:0] final_out[255:0];
+reg signed [17:0] bmag[255:0];//0:17
+reg signed [17:0] dp[255:0];//2:15
+reg signed [10:0] ph[255:0];//2:8
 reg [8:0] frame_c; //(0~511) may overflow
+reg [11:0] fft_counter;
 
+reg [12:0] t; //11:2 unsigned
+wire floor_t = t[12:2];//11:0
+wire [1:0]rr_frac = t[1:0]; //0:2
+wire [2:0]rr_frac_complement = 3'd4 - {{0},rr_frac};
+wire [1:0]rr_frac_c =rr_frac_complement[1:0];
+parameter r =4'd6; //2:2   1.5->6
+p =3'd3;//3:0
+q =3'd2;//3:0
+
+wire signed [17:0] abs_out;
+wire signed [17:0] ph_out;
+
+disassemble d1(.clk(OSC_50), .abs_out(abs_out), .ph_out(ph_out), .r(fft_source_real), .i(fft_source_imag));
 always@(posedge OSC_50) begin
 	case(fft_state)
 		0: begin
+			if (fft_source_valid) begin
+				fft_state <= 1;
+			else
+				fft_state <= 0;
+			end
 			
+			if (fft_source_sop) begin
+				fft_counter <= 0;
+			else 
+			
+			if (fft_source_eop) begin	
+				frame_c <= frame_c + 1;
+			end
+			//always register the data
+			cf_r[fft_counter]    <= fft_source_real;
+			cf_r[fft_counter]    <= fft_source_imag;
 		end
+
+		1: begin
+			fft_state <= 2;
+		end
+		
+		2: begin
+			cf_abs[fft_counter] <= abs_out;
+			fft_source_ready <= 1'b1;
+			fft_state <= 3;
+		end
+		
+		3: begin
+			cf_ph[fft_counter] <= ph_out;
+			fft_source_ready <= 1'b0;
+			
+
+		end
+		
+		4: begin //first while
+			if (floor_t < frame_c) begin
+				bmag <=(rr_frac_c * lf_abs + rr_frac * cf_abs)>>2;
+				dp   <= cf_ph - lf_ph;
+				fft_state <= 5;
+			else
+			
+				fft_state <= 8;
+			end
+		end
+		5: begin
+			if (dp > )
+		end
+		6: begin
+		end
+		
+					//update the sample counter (used to index win)
+			if (fft_counter < 255)
+				fft_counter <= fft_counter + 1;
+				fft_state <= 0;
+			else begin
+				fft_sink_eop_reg <= 1;
+			end
+		
+
 	endcase
 end
 
@@ -922,8 +992,8 @@ reg [17:0] fft_sink_real_reg;
 
 wire fft_sink_sop = fft_sink_sop_reg;
 wire fft_sink_eop = fft_sink_eop_reg;
-wire fft_sink_valid = fft_sink_valid_reg;
-wire fft_source_ready = ifft_sink_ready;
+wire fft_sink_valid = fft_sink_valid_reg; 
+reg fft_source_ready;
 wire fft_source_sop, fft_source_eop, fft_source_valid;
 wire [1:0] fft_source_error;
 wire [5:0] fft_source_exp;
