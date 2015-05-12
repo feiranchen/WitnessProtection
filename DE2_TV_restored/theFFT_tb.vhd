@@ -34,8 +34,8 @@ architecture tb of theFFT_tb is
 
   signal clk     : std_logic;
   signal reset_n : std_logic;
-  signal fftpts_in     : std_logic_vector (10 downto 0);
-  signal fftpts_out     : std_logic_vector (10 downto 0);
+  signal fftpts_in     : std_logic_vector (8 downto 0);
+  signal fftpts_out     : std_logic_vector (8 downto 0);
   signal inverse      : std_logic;
   signal sink_valid   : std_logic;
   signal sink_sop     : std_logic;
@@ -56,14 +56,14 @@ architecture tb of theFFT_tb is
   constant NUM_FRAMES_c : natural := 4;
   -- for testing purposes, the input file contains 2 frames of data of sizes
   type     fftpts_list_t is array (NUM_FRAMES_c - 1 downto 0) of natural;
-  signal fftpts_array : fftpts_list_t := (1024, 1024, 1024, 1024);
+  signal fftpts_array : fftpts_list_t := (256, 256, 256, 256);
   signal start            : std_logic;
   -- number of input frames
   signal frames_in_index   : natural range 0 to NUM_FRAMES_c := 0;
   -- number of output frames
   signal frames_out_index : natural range 0 to NUM_FRAMES_c := 0;
 
-  signal cnt        : natural range 0 to 1024;
+  signal cnt        : natural range 0 to 256;
   signal end_test   : std_logic;
   -- signal the end of the input data stream and output data stream.
   signal end_input  : std_logic;

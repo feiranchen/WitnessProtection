@@ -8,7 +8,7 @@
 % 2001-2009 Altera Corporation, All Rights Reserved
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameterization Space    
-N=1024;
+N=256;
 % Read input complex vector from source text files
 fidr = fopen('theFFT_real_input.txt','r');                                            
 fidi = fopen('theFFT_imag_input.txt','r');                                           

@@ -548,7 +548,7 @@ module DE2_TV
   
   //FOR DEBUGGING
   assign LED_RED = hcxT;
-  assign LED_GREEN=cellCount;
+  //assign LED_GREEN=cellCount;
   
   /*---------------- CENTROID AVERAGING BEGINS---------------------*/
   reg [31:0] hcxT,hcyT;//
@@ -705,21 +705,21 @@ assign left_channel_audio_out	= audio_out;
 assign right_channel_audio_out	= audio_out;
 assign write_audio_out			= audio_in_available & audio_out_allowed;
 
-reg[31:0] sample_in_reg;
+reg[17:0] sample_in_reg;
 reg sample_wrreq_reg;
 reg sample_rdreq_reg;
-wire [31:0] sample_in = sample_in_reg;
-wire [31:0] sample_out;
+wire [17:0] sample_in = sample_in_reg;
+wire [17:0] sample_out;
 wire sample_wrreq = sample_wrreq_reg;
 wire sample_rdreq = sample_rdreq_reg;
 wire samples_empty;
 
-reg[31:0] anon_in_reg;
+reg[17:0] anon_in_reg;
 reg anon_wrreq_reg;
 reg anon_rdreq_reg;
-wire [31:0] anon_in = anon_in_reg;
-wire [31:0] anon_out;
-wire anon_wrreq = anon_wrreq_reg;
+wire [17:0] anon_in;
+wire [17:0] anon_out;
+wire anon_wrreq;
 wire anon_rdreq = anon_rdreq_reg;
 wire anon_empty;
 wire anon_full;
@@ -764,7 +764,7 @@ end
 
 always@(posedge sclk) begin
 	sample_wrreq_reg <= 1;
-	sample_in_reg <= right_channel_audio_in;
+	sample_in_reg <= right_channel_audio_in[31:14];
 end
 
 reg [4:0] sample_state;
@@ -805,14 +805,13 @@ always@(posedge OSC_50) begin
 				sample_rdreq_reg <= 1;
 				sample_state <= 1;
 				
-				
 				//turn off valid signal so we can wait for another sample
-				fft_sink_valid <= 0;
+				fft_sink_valid_reg <= 0;
 			end
 			
 			//always turn off sink_eop and sink_sop
-			fft_sink_eop <= 0;
-			fft_sink_sop <= 0;
+			fft_sink_eop_reg <= 0;
+			fft_sink_sop_reg <= 0;
 		end
 		
 		1: begin
@@ -823,7 +822,7 @@ always@(posedge OSC_50) begin
 		
 		2: begin
 			//write the sample to the FFT module
-			fft_sink_valid <= 1;
+			fft_sink_valid_reg <= 1;
 			fft_sink_real_reg <= sample_out;
 			
 			
@@ -831,14 +830,14 @@ always@(posedge OSC_50) begin
 			sample_state <= 0;
 			
 			//update the sample counter (used to index win)
-			if (sample_counter < 1024) sample_counter <= sample_counter + 1;
+			if (sample_counter < 256) sample_counter <= sample_counter + 1;
 			else begin
 				sample_counter <= 0;
-				fft_sink_eop <= 1;
+				fft_sink_eop_reg <= 1;
 			end
 			
 			//pulse sop on first sample
-			if (sample_counter == 0) fft_sink_sop <= 1;
+			if (sample_counter == 0) fft_sink_sop_reg <= 1;
 		end
 	endcase
 end
@@ -850,18 +849,24 @@ reg [11:0] ifft_sample_counter;
 wire		ifft_sink_valid = fft_source_valid;
 wire		ifft_sink_sop = fft_source_sop;
 wire		ifft_sink_eop = fft_source_eop;
-wire[15:0]	ifft_sink_real = fft_source_real;
-wire[15:0]	ifft_sink_imag = fft_source_imag;
+wire[17:0]	ifft_sink_real = fft_source_real;
+wire[17:0]	ifft_sink_imag = fft_source_imag;
 wire[1:0]	ifft_sink_error = fft_source_error;
 
 
 
 /*FFT*/
-wire fft_sink_sop, fft_sink_eop, fft_sink_ready, fft_sink_valid;
+reg fft_sink_valid_reg, fft_sink_eop_reg, fft_sink_sop_reg;
+reg [17:0] fft_sink_real_reg;
+
+wire fft_sink_sop = fft_sink_sop_reg;
+wire fft_sink_eop = fft_sink_eop_reg;
+wire fft_sink_valid = fft_sink_valid_reg;
 wire fft_source_ready, fft_source_sop, fft_source_eop, fft_source_valid;
 wire [1:0] fft_source_error;
 wire [5:0] fft_source_exp;
-wire [17:0] fft_sink_real, fft_sink_imag, fft_source_real, fft_source_imag;
+wire [17:0] fft_sink_real = fft_sink_real_reg;
+wire [17:0] fft_source_real, fft_source_imag;
 
 theFFT fft1(
 	.clk(OSC_50),
@@ -871,7 +876,7 @@ theFFT fft1(
 	.sink_sop(fft_sink_sop),
 	.sink_eop(fft_sink_eop),
 	.sink_real(fft_sink_real),
-	.sink_imag(fft_sink_imag),
+	.sink_imag(18'b0), //never input any imaginary part
 	.sink_error(2'b0), //no upstream module, so no error yet.
 	.source_ready(fft_source_ready),
 	.sink_ready(fft_sink_ready),
@@ -883,12 +888,12 @@ theFFT fft1(
 	.source_real(fft_source_real),
 	.source_imag(fft_source_imag));
 
-	//always ready to take another anonymized output sample whenever the buffer is not full
-
-wire ifft_source_ready = ~anon_full
-wire ifft_source_sop;
-wire ifft_source_eop;
-wire ifft_source_valid;
+	
+//always ready to take another anonymized output sample whenever the buffer is not full
+wire ifft_source_ready = ~anon_full;
+wire ifft_source_sop; //don't care about source sop
+wire ifft_source_eop; //don't care about source eop either
+wire ifft_source_valid; //wired to anon_wrreq to trigger a write whenever the output is valid
 wire [1:0] ifft_source_error;
 wire [5:0] ifft_source_exp;
 wire [17:0] ifft_source_real, ifft_source_imag;
@@ -896,7 +901,7 @@ wire [17:0] ifft_source_real, ifft_source_imag;
 assign anon_wrreq = ifft_source_ready & ifft_source_valid;
 assign anon_in = ifft_source_real;
 
-theifft ifft2(
+theFFT ifft2(
 	.clk(OSC_50),
 	.reset_n(KEY[0]),
 	.inverse(1'b1),
@@ -916,7 +921,8 @@ theifft ifft2(
 	.source_real(ifft_source_real),
 	.source_imag(ifft_source_imag));
 
-assign LEDG[1:0] = ifft_source_error; 
+assign LED_GREEN[1:0] = ifft_source_error; 
+assign LED_GREEN[8:2] = 0;
 
 reg [4:0] anon_state;
 always@(posedge OSC_50) begin
@@ -936,7 +942,7 @@ always@(posedge OSC_50) begin
 		end
 		
 		2: begin
-			audio_out <= anon_out;
+			audio_out <= {anon_out, 14'b0};
 			anon_state <= 0;
 		end
 	endcase
