@@ -1,0 +1,26 @@
+[d,sr]=wavread('long.wav');
+if size(d,2)==1
+    d=d'
+end
+r=1.5;
+p=3;
+q=2;
+n = 256;
+
+s = length(d);
+% With hann windowing on both input and output, 
+% we need 25% window overlap for smooth reconstruction
+hop = n/4;
+output_hop = 0;
+x = zeros(1,s);
+for bb = 0:n:(s-f)
+    u = d((bb+1):(bb+f));             %get the next 1024 frame
+    temp = fft(u);
+    temp1 = [0, 0, temp(1:254)];
+    px = ifft(temp1);
+    x((bb+1):(bb+n)) = x((bb+1):(bb+n))+px;
+end
+
+y=x';
+
+soundsc(y,sr)
