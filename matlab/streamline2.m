@@ -62,7 +62,7 @@ for bb = 0:hop:(s-f)
 end;
 y=x';
 
-%soundsc(y,sr)
+soundsc(y,sr)
 f = Rsample(y,p,q); % NB: 0.8 = 4/5
 soundsc(f,sr) 
 %f = resample(y,p,q); % NB: 0.8 = 4/5

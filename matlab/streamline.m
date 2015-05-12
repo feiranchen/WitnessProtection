@@ -17,12 +17,12 @@ s = length(d);
 % pre-allocate output array
 % Append a 'safety' column on to the end of b to avoid problems 
 % taking *exactly* the last frame (i.e. 1*b(:,cols)+0*b(:,cols+1))
-b = zeros((1+f/2),2+fix((s-f)/hop));
-c = 1;
+b = zeros(f,2+fix((s-f)/hop));%(1+f/2)
+c=1;
 for bb = 0:hop:(s-f)
   u = win.*d((bb+1):(bb+f));
   temp = fft(u);
-  b(:,c) = temp(1:(1+f/2))';
+  b(:,c) = temp'; %(1:(1+f/2))';
   c = c+1;
 end;
 % Calculate the new timebase samples
@@ -33,7 +33,7 @@ t = 0:r:(fix((s-f)/hop) - 1);%1+fix((s-f)/hop) =cols
 
 % Generate the new spectrogram
 % Empty output array
-c = zeros((1+f/2), length(t));
+c = zeros(f, length(t));%(1+f/2)
 
 % Expected phase advance in each bin
 %dphi = zeros(1,f/2+1);
@@ -71,7 +71,7 @@ x = zeros(1,xlen);
 
 for bb = 0:hop:(hop*(cols-1))
   ft = c(:,1+bb/hop)';
-  ft = [ft, conj(ft([((n/2)):-1:2]))];
+  %ft = [ft, conj(ft([((n/2)):-1:2]))];
   px = real(ifft(ft));
   x((bb+1):(bb+n)) = x((bb+1):(bb+n))+px.*win;
 end;

@@ -1,7 +1,7 @@
 [d,sr]=wavread('long.wav');
-r=1;
-p=1;
-q=1;
+r=1.5;
+p=3;
+q=2;
 n = 256;
 win=getW(n);
 % With hann windowing on both input and output, 
@@ -22,15 +22,19 @@ s = length(d);
 c = 1;
 t = 0;
 frame_c = 0;
-lf_r = zeros((1+f/2), 1);
-lf_i = zeros((1+f/2), 1);
-lf_abs = zeros((1+f/2), 1);
-lf_ph = zeros((1+f/2), 1);
-cf_r = zeros((1+f/2), 1);
-cf_i = zeros((1+f/2), 1);
-cf_abs = zeros((1+f/2), 1);
-cf_ph = zeros((1+f/2), 1);
-result = zeros((1+f/2),1);
+lf_r = zeros(f, 1);
+lf_i = zeros(f, 1);
+lf_abs = zeros(f, 1);
+lf_ph = zeros(f, 1);
+cf_r = zeros(f, 1);
+cf_i = zeros(f, 1);
+cf_abs = zeros(f, 1);
+cf_ph = zeros(f, 1);
+
+%left_frame = zeros(f, 1);
+%current_frame = zeros(f, 1);
+result_r = zeros(f,1);
+result_i = zeros(f,1);
 ph = 0;
 
 x = zeros(1,fix(s/r)+n);
@@ -38,27 +42,27 @@ output_hop = 0;
 for bb = 0:hop:(s-f)
     u = win.*d((bb+1):(bb+f));             %get the next 1024 frame
     temp = fft(u);         %do the fft
-    [cf_r, cf_i, cf_abs, cf_ph]= disassemble(temp(1:(1+f/2))');%take half the fft output
+    [cf_r, cf_i, cf_abs, cf_ph]= disassemble(temp');
+    %current_frame = temp';
 
     while floor(t) < frame_c
         rr_frac = t - floor(t);
 
         %pvsample code here
         bmag =  (1-rr_frac) * lf_abs + rr_frac * cf_abs; %interpolate
+        %tp = angle(current_frame) - angle(left_frame);
         dp = cf_ph - lf_ph; % calculate phase advance
-        dp = dp - 2 * pi * round(dp/(2*pi)); %translate to exponential notation
+        
+        dp = dp - 2 * pi * round(dp/(2*3.1416)); %translate to exponential notation
         ph = ph + dp;   %accumulate
         result_r = bmag .* cos(ph);
         result_i = bmag .* sin(ph);
-        result = bmag .* exp(j*ph);
         
-        ft = result';
-        ft = [ft, conj(ft([((n/2)):-1:2]))];
-        px = real(ifft(ft));
+        px = real(ifft((result_r + result_i*1i)'));
         x((output_hop+1):(output_hop+n)) = x((output_hop+1):(output_hop+n))+px.*win;
         output_hop = output_hop+ hop;
         t = t + r;
-        inter = 0;
+        inter = 0; 
     end;
 
     if floor(t) == frame_c
@@ -66,6 +70,7 @@ for bb = 0:hop:(s-f)
         lf_i = cf_i;
         lf_abs = cf_abs;
         lf_ph = cf_ph;
+        %left_frame = current_frame;
         inter = 1;
     end;
     
