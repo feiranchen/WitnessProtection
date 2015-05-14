@@ -800,7 +800,6 @@ reg [4:0] sample_state;
 	endcase
 end*/
 reg [17:0] raw_in[255:0];
-reg [4:0] sample_state;
 reg [11:0] sample_counter;
 wire signed [17:0] win;//0:18
 reg signed [35:0] win_so;//0:36 win*sample_counter
@@ -812,7 +811,8 @@ always@(posedge OSC_50) begin
 				//start a read
 				sample_rdreq_reg <= 1;
 				sample_state <= 1;
-			else
+			end
+			else begin
 				sample_state <= 0;
 			end
 			
@@ -831,7 +831,6 @@ always@(posedge OSC_50) begin
 		end
 		
 		2: begin
-<<<<<<< HEAD
 		   //store raw samples
 			raw_in[sample_counter] <= sample_out;
 			// multiply window
@@ -846,21 +845,9 @@ always@(posedge OSC_50) begin
 				fft_sink_real_reg <= win_so[35:18];
 				
 				//update the sample counter (used to index win)
-				if (sample_counter < 255)
+				if (sample_counter < 255) begin
 					sample_counter <= sample_counter + 1;
-=======
-			if (fft_sink_ready == 1) begin
-				//write the sample to the FFT module
-				fft_sink_valid_reg <= 1;
-				fft_sink_real_reg <= sample_out;
-				//audio_out<=sample_out;
-				
-				//go back to wait for another sample
-				sample_state <= 0;
-				
-				//update the sample counter (used to index win)
-				if (sample_counter < 255) sample_counter <= sample_counter + 1;
->>>>>>> 632ea8507ebf99a4934c1b5e90f8997b22a8bffb
+				end
 				else begin
 					sample_counter <= 0;
 					fft_sink_eop_reg <= 1;
@@ -868,11 +855,11 @@ always@(posedge OSC_50) begin
 				
 				//pulse sop on first sample
 				if (sample_counter == 0) fft_sink_sop_reg <= 1;
-<<<<<<< HEAD
 				
 				//go back to wait for another sample
 				sample_state <= 0;
-			else // Wait till sink is ready
+			end
+			else begin// Wait till sink is ready
 				sample_state <= 3;
 			end
 		end
@@ -880,16 +867,15 @@ always@(posedge OSC_50) begin
 		4: begin
 			//turn off valid signal so we can wait for another sample
 			fft_sink_valid_reg <= 0;
-			if (sample_counter == 192) //256/4*3, first idx of last quarter
+			if (sample_counter == 192) begin //256/4*3, first idx of last quarter
 				sample_state <= 0;
-			else
+			end
+			else begin
 				//shift and store raw samples
 				raw_in[sample_counter] <= raw_in[sample_counter + 64];
 				// multiply window
 				win_so                 <= raw_in[sample_counter + 64] * win;
 				sample_state <= 3;
-=======
->>>>>>> 632ea8507ebf99a4934c1b5e90f8997b22a8bffb
 			end
 		end
 	endcase
@@ -929,11 +915,11 @@ reg [11:0] fft_counter;
 reg [12:0] t; //11:2 unsigned
 wire floor_t = t[12:2];//11:0
 wire [1:0]rr_frac = t[1:0]; //0:2
-wire [2:0]rr_frac_complement = 3'd4 - {{0},rr_frac};
+wire [2:0]rr_frac_complement = 3'd4 - {{1'd0},rr_frac};
 wire [1:0]rr_frac_c =rr_frac_complement[1:0];
 parameter r =4'd6; //2:2   1.5->6
-p =3'd3;//3:0
-q =3'd2;//3:0
+//p =3'd3; //3:0
+//q =3'd2; //3:0
 
 wire signed [17:0] abs_out;
 wire signed [17:0] ph_out;
@@ -944,13 +930,14 @@ always@(posedge OSC_50) begin
 		0: begin
 			if (fft_source_valid) begin
 				fft_state <= 1;
-			else
+			end
+			else begin
 				fft_state <= 0;
 			end
 			
-			if (fft_source_sop) begin
+			if (fft_source_sop) 
 				fft_counter <= 0;
-			else 
+				
 			
 			if (fft_source_eop) begin	
 				frame_c <= frame_c + 1;
@@ -979,28 +966,29 @@ always@(posedge OSC_50) begin
 		
 		4: begin //first while
 			if (floor_t < frame_c) begin
-				bmag <=(rr_frac_c * lf_abs + rr_frac * cf_abs)>>2;
-				dp   <= cf_ph - lf_ph;
+				bmag[fft_counter] <=((rr_frac_c * lf_abs[fft_counter] + rr_frac * cf_abs[fft_counter])>>2);
+				dp[fft_counter]   <= cf_ph[fft_counter] - lf_ph[fft_counter];
 				fft_state <= 5;
-			else
+			end
+			else begin
 			
 				fft_state <= 8;
 			end
 		end
+		
 		5: begin
-			if (dp > )
 		end
 		6: begin
 		end
 		
 					//update the sample counter (used to index win)
-			if (fft_counter < 255)
-				fft_counter <= fft_counter + 1;
-				fft_state <= 0;
-			else begin
-				fft_sink_eop_reg <= 1;
-			end
-		
+//			if (fft_counter < 255) 
+//				fft_counter <= fft_counter + 1;
+//				fft_state <= 0;
+//			else begin
+//				fft_sink_eop_reg <= 1;
+//			end
+//		
 
 	endcase
 end
@@ -1011,15 +999,10 @@ reg [17:0] fft_sink_real_reg;
 
 wire fft_sink_sop = fft_sink_sop_reg;
 wire fft_sink_eop = fft_sink_eop_reg;
-<<<<<<< HEAD
 wire fft_sink_valid = fft_sink_valid_reg; 
 reg fft_source_ready;
 wire fft_source_sop, fft_source_eop, fft_source_valid;
-=======
-wire fft_sink_valid = fft_sink_valid_reg;
-wire fft_source_ready = ifft_sink_ready;
-wire fft_source_sop, fft_source_eop, fft_source_valid, fft_sink_ready;
->>>>>>> 632ea8507ebf99a4934c1b5e90f8997b22a8bffb
+
 wire [1:0] fft_source_error;
 wire signed [5:0] fft_source_exp;
 wire signed [17:0] fft_sink_real = fft_sink_real_reg;

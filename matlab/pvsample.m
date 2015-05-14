@@ -57,6 +57,6 @@ for tt = t
   % Save the column
   c(:,ocol) = bmag .* exp(j*ph);
   % Cumulate phase, ready for next frame
-  ph = ph + dphi' + dp;
+  ph = ph + dphi' + dp;%angle(bcols(:,2));%angle(bcols(:,1))+tf*dp;
   ocol = ocol+1;
 end
