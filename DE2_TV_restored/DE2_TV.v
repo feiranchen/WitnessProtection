@@ -977,18 +977,19 @@ always@(posedge OSC_50) begin
 		end
 		
 		5: begin
+      
 		end
 		6: begin
 		end
 		
-					//update the sample counter (used to index win)
-//			if (fft_counter < 255) 
-//				fft_counter <= fft_counter + 1;
-//				fft_state <= 0;
-//			else begin
-//				fft_sink_eop_reg <= 1;
-//			end
-//		
+			//update the sample counter (used to index win)
+			if (fft_counter < 255) 
+				fft_counter <= fft_counter + 1;
+				fft_state <= 0;
+			else begin
+				fft_sink_eop_reg <= 1;
+			end
+		
 
 	endcase
 end
