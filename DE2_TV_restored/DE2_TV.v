@@ -977,10 +977,14 @@ always@(posedge OSC_50) begin
 		end
 		
 		5: begin
-      
+
 		end
 		6: begin
 		end
+
+
+    7: begin
+    end
 		
 			//update the sample counter (used to index win)
 			if (fft_counter < 255) 
